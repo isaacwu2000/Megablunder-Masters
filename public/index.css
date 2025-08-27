@@ -9,7 +9,7 @@
 }
 
 body {
-    margin: 36px 48px 48px 48px;
+    margin: 36px max(48px, 10%) 0px max(48px, 10%);
 }
 
 nav {
@@ -30,11 +30,17 @@ h1 {
 h2 {
     font-weight: 400;
     font-size: 28px;
+    margin: 16px 0px 16px 0px;
+}
+
+p {
+    max-width: 60ch;
+    line-height: 2;
 }
 
 /* Nav bar */
 nav {
-    margin: 0px 0px 56px 0px;
+    margin: 0px 0px 72px 0px;
 }
 
 #name {   
@@ -62,19 +68,19 @@ nav {
 
 /* Hero */
 #hero {
-    margin-bottom: 96px;
+    margin-bottom: 164px;
 }
 
 #hook {
-    margin: 0px 0px 12px 0px;
+    margin: 0px 0px 40px 0px;
 }
 
 #hookSubtitle {
-    margin: none;
+    margin: auto;
 }
 
 #mainMessage {
-    margin-bottom: 48px;
+    margin-bottom: 72px;
 }
 
 #getStartedBtnLarge {
@@ -90,3 +96,60 @@ nav {
 }
 
 /* Benefits */
+@media (min-width: 1000px) {
+    #keyBenefits {
+        display: flex;
+        justify-content: space-between;
+        gap: 64px;
+        margin-bottom: 100px;
+    }
+}
+
+@media (max-width: 999px) {
+    #keyBenefits {
+        display: flex;
+        flex-direction: column;
+        gap: 64px;
+        margin-bottom: 100px;
+    }
+}
+
+/* Contact and acknowledgments*/
+#contact, #acknowledgements {
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+}
+
+/* Code */
+#code {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+/* Footer */
+br {
+  display: inline-block;
+  width: 100%;
+  border-top: 1px dashed red;
+}
+
+footer {
+    color: #eeeeee;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px min(-48px, -10vw) 0px min(-48px, -10vw);
+    padding: 20px 0px 48px 0px;
+    background-color: #1d1d1d;
+}
+footer a {
+    color: #eeeeee;
+    text-decoration: none;
+    max-width: 1vw;
+}
+
