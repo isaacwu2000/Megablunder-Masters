@@ -1,0 +1,12 @@
+:root {
+    --main-accent: #00457f;
+    --secondary-accent: #f9b05c;
+    font-family: 'Lexend';
+    font-weight: 300; 
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+}
+
