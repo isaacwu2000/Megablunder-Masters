@@ -2,7 +2,14 @@
     --main-accent: #00457f;
     --secondary-accent: #f9b05c;
     font-family: 'Lexend';
-    font-weight: 300; 
+    font-weight: 300;
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+body {
+    margin: 36px 48px 48px 48px;
 }
 
 nav {
@@ -10,3 +17,76 @@ nav {
     justify-content: space-between;
 }
 
+img {
+    width: 200px;
+    height: 200px;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 48px;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 28px;
+}
+
+/* Nav bar */
+nav {
+    margin: 0px 0px 56px 0px;
+}
+
+#name {   
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+#logo {
+    width: 28px;
+    height: 28px;
+    margin-right: 4px;
+}
+
+#signInBtn{
+    font-family: 'Lexend';
+    font-weight: 300;
+    width: 108px;
+    height: 28px;
+    background-color: white;
+    border-color: black;
+    border-width: 1.6px;
+    border-radius: 16px;
+}
+
+/* Hero */
+#hero {
+    margin-bottom: 96px;
+}
+
+#hook {
+    margin: 0px 0px 12px 0px;
+}
+
+#hookSubtitle {
+    margin: none;
+}
+
+#mainMessage {
+    margin-bottom: 48px;
+}
+
+#getStartedBtnLarge {
+    font-family: 'Lexend';
+    font-size: 36px;
+    color: white;
+    background-color: var(--main-accent);
+    width: 360px;
+    height: 120px;
+    border: none;
+    border-radius: 64px;
+    box-shadow: 0px 4px black;
+}
+
+/* Benefits */
