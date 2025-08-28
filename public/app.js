@@ -18,10 +18,11 @@ function initApp() {
     signOutBtn.onclick = async () => {
         await signOut(auth);
         await loadPage('index.html');
+        location.reload();
     }
 }
 
-getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider)
+getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -31,5 +32,6 @@ onAuthStateChanged(auth, async (user) => {
         initApp();
     } else {
         console.log('signed out');
+        getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
     }
 });
