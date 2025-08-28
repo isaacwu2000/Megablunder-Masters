@@ -8,13 +8,49 @@
 <body>
     <nav>
         <div id="name">
-            <img id="logo" src="media/miltonSimplified.png" alt="Simplified logo of Milton Academy">
+            <img class="logo" src="media/miltonSimplified.png" alt="Simplified logo of Milton Academy">
             Megablunder Masters
         </div>
         <button id="signOutBtn">Sign out</button>
     </nav>
     <main>
-        App
+        <select name="topic" id="topicSelector">
+            <option value="all">All Megablunders</option>
+            <option value="frag">Fragments (FRAG)</option>
+            <option value="ros">Run-on Sentences (ROS)</option>
+            <option value="pr">Pronoun Reference (PR)</option>
+            <option value="agr">Agreement (AGR)</option>
+            <<option value="par">Parallelism (PAR)</option>
+            <option value="case">Case (CASE)</option>
+            <option value="mm">Misplaced Modifiers (MM)</option>
+            <option value="dm">Dangling Modifiers (DM)</option>
+        </select>
+        <div id="problem">
+            <div id="instructions">
+                In the following sentence, identify which section contains a Megablunder
+            </div>
+            <div id="sentence">
+                While the extent of this improvement [that] (B) can be attributed to Trotsky is difficult to discern, especially when one considers that some improvement could be attributed to economic recovery from the Great War and the Russian Civil War as well as various other NEP [policies because] (C) Trotsky created the [unanimously approved] (D) four-stage plan, which guided economic policies during the NEP-era, and he advocated [heavily] (E) for the electrification of Russia prior to his lackluster time as a director of the ETO, a significant portion of the improvement in power generation can be credited to Trotsky.
+            </div>
+            <div id="answerChoices">
+                <form>
+                    <button type="submit">A</button>
+                    <button type="submit">B</button>
+                    <button type="submit">C</button>
+                    <button type="submit">D</button>
+                    <button type="submit">E</button>
+                </form>
+            </div>
+        </div>
+        <div id="solution">
+            <div id="feedback">
+                Correct!
+            </div>
+            <div id="fullSoltion">
+                There are no errors in this sentence. Option (B), 'that', correctly introduces a adjective clause modifying 'improvement'. Option (C), 'policies because', appropriately uses 'because' to introduce a subordinate clause of reason, logically connecting to the preceding ideas about NEP policies. Option (D), 'unanimously approved', features the adverb 'unanimously' correctly modifying the adjective 'approved', which describes 'four-stage plan'. Option (E), 'heavily', is an adverb correctly modifying the verb 'advocated'. The sentence, though complex, is grammatically correct.
+            </div>
+        </div>
+        <button id="continue">Continue</button>
     </main>
 </body>
 </html>

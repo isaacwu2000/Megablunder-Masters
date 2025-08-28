@@ -1,0 +1,61 @@
+:root {
+    --main-accent: #00457f;
+    --secondary-accent: #f9b05c;
+    font-family: 'Lexend';
+    font-weight: 300;
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+body {
+    margin: 36px max(48px, 10%) 0px max(48px, 10%);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 48px;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 28px;
+    margin: 16px 0px 16px 0px;
+}
+
+p {
+    max-width: 60ch;
+    line-height: 2;
+}
+
+button:hover {
+    opacity: 60%;
+    transition: opacity 0.1s ease;
+}
+
+/* Nav bar */
+nav {
+    margin: 0px 0px 72px 0px;
+}
+
+#name {   
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 28px;
+    height: 28px;
+    margin-right: 4px;
+}

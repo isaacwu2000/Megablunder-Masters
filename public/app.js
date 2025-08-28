@@ -15,6 +15,7 @@ async function loadPage(page) {
 
 function initApp() {
     signOutBtn = document.getElementById('signOutBtn');
+    document.querySelector("link[rel=stylesheet][href='styles/index.css']").href = "styles/app.css";
     signOutBtn.onclick = async () => {
         await signOut(auth);
         await loadPage('index.html');
@@ -32,6 +33,7 @@ onAuthStateChanged(auth, async (user) => {
         initApp();
     } else {
         console.log('signed out');
+        document.querySelector("link[rel=stylesheet][href='styles/app.css']").href = "styles/index.css";
         getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
     }
 });
