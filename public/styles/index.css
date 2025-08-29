@@ -78,7 +78,6 @@
 br {
   display: inline-block;
   width: 100%;
-  border-top: 1px dashed red;
 }
 
 footer {

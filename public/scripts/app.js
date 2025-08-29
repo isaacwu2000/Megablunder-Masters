@@ -1,7 +1,6 @@
 import { onAuthStateChanged, signInWithPopup } from './firebaseConfig.js';
 import { app, auth, db, signOut, provider } from './firebaseConfig.js';
 
-const appPage = document.getElementById('app');
 const getStartedBtnLarge = document.getElementById('getStartedBtnLarge');
 const signInBtn = document.getElementById('signInBtn');
 let signOutBtn;
@@ -9,7 +8,8 @@ let signOutBtn;
 async function loadPage(page) {
     const result = await fetch(page);
     const html = await result.text();
-    appPage.innerHTML = html;
+    console.log('html' + html);
+    document.body.innerHTML = html;
 }
 
 function initApp() {
