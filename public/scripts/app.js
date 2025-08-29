@@ -4,7 +4,6 @@ import { app, auth, db, signOut, provider } from './firebaseConfig.js';
 const appPage = document.getElementById('app');
 const getStartedBtnLarge = document.getElementById('getStartedBtnLarge');
 const signInBtn = document.getElementById('signInBtn');
-const getStartedBtnSmall = document.getElementById('getStartedBtnSmall');
 let signOutBtn;
 
 async function loadPage(page) {
@@ -24,6 +23,7 @@ function initApp() {
 }
 
 getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
+signInBtn.onclick = () => signInWithPopup(auth, provider);
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -35,5 +35,6 @@ onAuthStateChanged(auth, async (user) => {
         console.log('signed out');
         document.querySelector("link[rel=stylesheet][href='styles/app.css']").href = "styles/index.css";
         getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
+        signInBtn.onclick = () => signInWithPopup(auth, provider);
     }
 });
