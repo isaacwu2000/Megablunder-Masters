@@ -91,6 +91,7 @@ main {
 }
 
 #continueBtn {
+    margin-top: 40px;
     color: white;
     font-size: 24px;
     width: 160px;
