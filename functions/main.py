@@ -2,11 +2,6 @@ from firebase_functions import https_fn, options
 from firebase_admin import firestore, initialize_app
 from math import e
 
-"""
-cred = credentials.ApplicationDefault()
-firebase_admin.initialize_app(cred)
-"""
-
 app = initialize_app()
 db = firestore.client()
 

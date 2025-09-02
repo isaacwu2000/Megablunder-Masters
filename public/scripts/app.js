@@ -3,8 +3,8 @@ import { auth, db, provider, functions } from './firebaseConfig.js';
 import { collection, doc, updateDoc, setDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp } from './firebaseConfig.js';
 import { httpsCallable, connectFunctionsEmulator } from './firebaseConfig.js';
 
-// Todo: Get rid of this when in production
-connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+// Dev only:
+// connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 const getStartedBtnLarge = document.getElementById('getStartedBtnLarge');
 const signInBtn = document.getElementById('signInBtn');
