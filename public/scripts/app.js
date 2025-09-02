@@ -1,6 +1,10 @@
-import { getAdditionalUserInfo, signOut, onAuthStateChanged, signInWithPopup } from './firebaseConfig.js';
-import { app, auth, db, provider } from './firebaseConfig.js';
+import { signOut, onAuthStateChanged, signInWithPopup } from './firebaseConfig.js';
+import { auth, db, provider, functions } from './firebaseConfig.js';
 import { collection, doc, updateDoc, setDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp } from './firebaseConfig.js';
+import { httpsCallable, connectFunctionsEmulator } from './firebaseConfig.js';
+
+// Get rid of this when in production
+connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 const getStartedBtnLarge = document.getElementById('getStartedBtnLarge');
 const signInBtn = document.getElementById('signInBtn');
@@ -13,18 +17,20 @@ let feedback;
 let fullSolution;
 let continueBtn;
 
-// Manage user authentication and app loading
+// Manage problems and elos
+const getProblem = httpsCallable(functions, 'get_problem');
+const updateElos = httpsCallable(functions, 'update_elos');
+
+
+// Manage app loading
 async function loadPage(page) {
     const result = await fetch(page);
     const html = await result.text();
     document.body.innerHTML = html;
 }
 
-function keepOpacity(btn) {
-    btn.style.opacity = "1"; // Preventing opcaity change on hover
-}
-
-function initApp(problemDoc, userDoc) {
+// Manage app
+function initApp(problem) {
     signOutBtn = document.getElementById('signOutBtn');
     topicSelector = document.getElementById('topicSelector');
     answerChoices = document.getElementById('answerChoices');
@@ -32,19 +38,17 @@ function initApp(problemDoc, userDoc) {
     feedback = document.getElementById('feedback');
     fullSolution = document.getElementById('fullSolution');
     continueBtn = document.getElementById('continueBtn');
-    
+
     let category;
 
-    try {
-        document.querySelector("link[rel=stylesheet][href='styles/index.css']").href = "styles/app.css";
-    } catch (TypeError) {
-        console.log('switiching topic');
-    }
+    // Setting the problem
+    sentence.innerHTML = problem.problemStatement;
+
+    // Update css
+    try {document.querySelector("link[rel=stylesheet][href='styles/index.css']").href = "styles/app.css";} catch (TypeError) {}
     
     answerChoices.onsubmit = async (event) => {
         event.preventDefault();
-        // todo: update user's attemptedProblems collection
-
         // Prevent the User from submitting again
         const answerBtns = document.getElementsByClassName('answerChoice');
         for (const btn of answerBtns) {
@@ -53,29 +57,28 @@ function initApp(problemDoc, userDoc) {
             btn.addEventListener("mouseover", keepOpacity(btn));
         };
 
-        // Show solution, continueBtn, and feedback based on User response 
-        const userCorrect = await updateElos(userDoc, problemDoc, event.submitter.value);
-        if (userCorrect) { // Show color and text feedback
+        // Show solution, continueBtn, and feedback based on user response 
+        const correct = await updateElos({problemId: problem.id, userAnswer: event.submitter.value});
+        if (correct.data.correct) { // Show color and text feedback
             event.submitter.style.backgroundColor = '#70e615';
             feedback.innerHTML = 'Correct!';
         } else {
             event.submitter.style.backgroundColor = '#ff5b24';
             feedback.innerHTML = 'Incorrect'
         }
-        fullSolution.innerHTML = await problemDoc.data().solution;
-        console.log(fullSolution.innerHTML);
+        fullSolution.innerHTML = await problem.solution;
         solution.hidden = false;
         continueBtn.hidden = false;
 
         continueBtn.onclick = async () => {
             // Getting the next problem when the continueBtn is clicked
             if (category) {
-                problemDoc = await getProblem(userDoc, category);
+                problem = (await getProblem({category: category})).data;
             } else {
-                problemDoc = await getProblem(userDoc);
+                problem = (await getProblem({category: ''})).data;
             }
                 
-            sentence.innerHTML = await problemDoc.data().problemStatement;
+            sentence.innerHTML = await problem.problemStatement;
 
             // Hiding the solution, feedback, and continueBtn
             solution.hidden = true;
@@ -100,10 +103,10 @@ function initApp(problemDoc, userDoc) {
         if (category=='all') {
             category=='';
         }
-        
+
         // Updating the problem to be of that category
-        problemDoc = await getProblem(userDoc, category);
-        sentence.innerHTML = await problemDoc.data().problemStatement;
+        problem = await getProblem(category);
+        sentence.innerHTML = problem.problemStatement;
 
         // Hiding the solution, feedback, and continueBtn
         solution.hidden = true;
@@ -119,9 +122,9 @@ function initApp(problemDoc, userDoc) {
     }
 }
 
+// Manage auth and ensure sign in buttons function properly
 getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
 signInBtn.onclick = () => signInWithPopup(auth, provider);
-
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         console.log(user);
@@ -130,16 +133,13 @@ onAuthStateChanged(auth, async (user) => {
             await setDoc(doc(db, 'users', uid), {
                 email: user.email,
                 displayName: user.displayName,
-                elo: 300 // Todo: edit this baseline elo based on average
+                elo: 300 // Todo: edit this baseline elo based on average and move it to a cloud function
             });
         }
         await loadPage('app.html');
-        const userDoc = await getDoc(doc(db, 'users', uid));
-        let problemDoc = await getProblem(userDoc);
 
-        initApp(problemDoc, userDoc);
-        sentence.innerHTML = await problemDoc.data().problemStatement;
-        
+        let problem = await getProblem({category: ''});
+        initApp(problem.data);
     } else {
         console.log('signed out');
         document.querySelector("link[rel=stylesheet][href='styles/app.css']").href = "styles/index.css";
@@ -148,97 +148,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// Manage problems and elos
-async function getProblem(userDoc, category) {
-    let userElo = await userDoc.data().elo;
-    let q;
-    // Querying for the hardest problem with elo between 32–65 less than the user's
-    // so that the user has a 75%–90% chance of doing the problem correctly
-    if (category) {
-        console.log('test');
-        q = await getDocs(await query(collection(db, 'problems'), 
-            where('category', '==', category),
-            where('elo', '>=', userElo-65),
-            where('elo', '<=', userElo-32),
-            orderBy('elo', 'desc'), 
-            limit(1)
-        ));
-        if (q.empty) {
-            console.log('test');
-            q = await getDocs(await query(collection(db, 'problems'),
-                where('category', '==', category),
-                where('elo', '>=', userElo-65),
-                limit(1)
-            ));
-            if (q.empty) {
-                console.log('test');
-                q = await getDocs(await query(
-                    collection(db, 'problems'),
-                    where('category', '==', category), 
-                    limit(1)
-                ));
-                if (q.empty) {
-                    console.log('test');
-                    q = await getDocs(await query(
-                        collection(db, 'problems'),
-                        limit(1)
-                    ));
-                };
-            };
-        }
-    } else {
-        console.log('test');
-        q = await getDocs(await query(collection(db, 'problems'),
-            where('elo', '>=', userElo-65),
-            where('elo', '<=', userElo-32),
-            orderBy('elo', 'desc'), 
-            limit(1)
-        ));
-        if (q.empty) {
-            console.log('test');
-            q = await getDocs(await query(collection(db, 'problems'),
-                where('elo', '>=', userElo-65),
-                limit(1)
-            ));
-            if (q.empty) {
-                console.log('test');
-                q = await getDocs(await query(
-                    collection(db, 'problems'), 
-                    limit(1)
-                ));
-            };
-        }
-    }
-    
-    const optimalDoc = q.docs[0];
-    console.log("Optimal: " + optimalDoc.id, " => ", optimalDoc.data());
-    return optimalDoc;
+// Prevent opcaity change on hover
+function keepOpacity(btn) {
+    btn.style.opacity = "1"; 
 }
-
-async function updateElos(userDoc, problemDoc, userAnswer) {
-    let userElo = userDoc.data().elo;
-    let problemElo = problemDoc.data().elo;
-    console.log('original elo: ' + 'userElo: ' + userElo + 'problemElo: ' + problemElo);
-    const probabilityUserLose = 1 / (1 + Math.pow(Math.E, -1 * (userElo - problemElo) / 30));
-    const k = 20;
-    const userWin = (userAnswer == problemDoc.data().answer);
-    if (userWin) {
-        userElo += k * probabilityUserLose;
-        problemElo -= k * probabilityUserLose;
-    } else {
-        userElo -= k * (1 - probabilityUserLose);
-        problemElo += k * (1 - probabilityUserLose);
-    }
-    await updateDoc(userDoc.ref, {
-        elo: userElo
-    });
-    await updateDoc(problemDoc.ref, {
-        elo: problemElo
-    });
-    console.log('elos updated: ' + 'userElo: ' + userElo + 'problemElo: ' + problemElo);
-    return userWin;
-}
-
-
-
-// todo: Change topic

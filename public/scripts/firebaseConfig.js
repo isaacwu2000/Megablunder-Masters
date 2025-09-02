@@ -1,7 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js';
-export { getAdditionalUserInfo, onAuthStateChanged, signOut, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
+import { getFunctions } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js';
+export { httpsCallable, connectFunctionsEmulator } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js';
+export { onAuthStateChanged, signOut, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
 export { collection, doc, addDoc, updateDoc, setDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -14,7 +16,8 @@ const firebaseConfig = {
     measurementId: "G-R0LKMXKGTX"
 };
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const provider = new GoogleAuthProvider();
+export const functions = getFunctions(app);

@@ -1,6 +1,6 @@
 npm install firebase
-curl -sL https://firebase.tools | bash
+npm install -g firebase-tools
 firebase login
-firebase init # I want hosting
+firebase init # I want hosting, functions, and emulators
 firebase serve
 firebase deploy
