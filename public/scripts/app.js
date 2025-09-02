@@ -3,7 +3,7 @@ import { auth, db, provider, functions } from './firebaseConfig.js';
 import { collection, doc, updateDoc, setDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp } from './firebaseConfig.js';
 import { httpsCallable, connectFunctionsEmulator } from './firebaseConfig.js';
 
-// Get rid of this when in production
+// Todo: Get rid of this when in production
 connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 const getStartedBtnLarge = document.getElementById('getStartedBtnLarge');
@@ -21,7 +21,6 @@ let continueBtn;
 const getProblem = httpsCallable(functions, 'get_problem');
 const updateElos = httpsCallable(functions, 'update_elos');
 
-
 // Manage app loading
 async function loadPage(page) {
     const result = await fetch(page);
@@ -38,7 +37,6 @@ function initApp(problem) {
     feedback = document.getElementById('feedback');
     fullSolution = document.getElementById('fullSolution');
     continueBtn = document.getElementById('continueBtn');
-
     let category;
 
     // Setting the problem
@@ -99,13 +97,12 @@ function initApp(problem) {
     topicSelector.onchange = async (event) => {
         event.preventDefault();
         category = event.target.value;
-        console.log(category);
         if (category=='all') {
             category=='';
         }
 
         // Updating the problem to be of that category
-        problem = await getProblem(category);
+        problem = (await getProblem({category: category})).data;
         sentence.innerHTML = problem.problemStatement;
 
         // Hiding the solution, feedback, and continueBtn

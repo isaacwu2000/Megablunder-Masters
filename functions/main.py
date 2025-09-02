@@ -45,6 +45,11 @@ def get_problem(req: https_fn.CallableRequest):
                     .where("category", "==", category)
                     .limit(1)
                 )
+                if not len(query.get()):
+                    query = (
+                        db.collection("problems")
+                        .limit(1)
+                    )
     else:
         query = (
             db.collection("problems")
@@ -66,6 +71,9 @@ def get_problem(req: https_fn.CallableRequest):
                 )
 
     # Get and return the optimal problem as a dict
+    print("query:",query)
+    print("query get:",query.get())
+    print(len(query.get()))
     problem_doc = query.get()[0]
     problem_info: dict = problem_doc.to_dict()
     print({
