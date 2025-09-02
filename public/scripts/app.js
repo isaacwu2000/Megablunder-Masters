@@ -124,7 +124,6 @@ getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
 signInBtn.onclick = () => signInWithPopup(auth, provider);
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        console.log(user);
         const uid = user.uid;
         if (user.metadata.creationTime == user.metadata.lastSignInTime) {
             await setDoc(doc(db, 'users', uid), {
@@ -138,7 +137,6 @@ onAuthStateChanged(auth, async (user) => {
         let problem = await getProblem({category: ''});
         initApp(problem.data);
     } else {
-        console.log('signed out');
         document.querySelector("link[rel=stylesheet][href='styles/app.css']").href = "styles/index.css";
         getStartedBtnLarge.onclick = () => signInWithPopup(auth, provider);
         signInBtn.onclick = () => signInWithPopup(auth, provider);
