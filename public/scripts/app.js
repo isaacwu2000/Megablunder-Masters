@@ -97,7 +97,10 @@ function initApp(problemDoc, userDoc) {
         event.preventDefault();
         category = event.target.value;
         console.log(category);
-
+        if (category=='all') {
+            category=='';
+        }
+        
         // Updating the problem to be of that category
         problemDoc = await getProblem(userDoc, category);
         sentence.innerHTML = await problemDoc.data().problemStatement;
