@@ -5,4 +5,4 @@ firebase init # I want hosting, functions, and emulators
 firebase serve
 firebase deploy
 
-https://cloud.google.com/sdk/docs/install # these things
+gcloud auth application-default login
