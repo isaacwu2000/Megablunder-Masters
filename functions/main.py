@@ -8,7 +8,7 @@ db = firestore.client()
 @https_fn.on_call(
     cors=options.CorsOptions(
         cors_origins="*", # allow all origins
-        cors_methods=["post", "options"] # preflight + call
+        cors_methods=["post", "get", "options"] # preflight + call
     )
 )
 
