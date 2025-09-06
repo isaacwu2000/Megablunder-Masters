@@ -76,7 +76,7 @@ function initApp(problem) {
                 problem = (await getProblem({category: ''})).data;
             }
                 
-            sentence.innerHTML = await problem.problemStatement;
+            sentence.innerHTML = problem.problemStatement;
 
             // Hiding the solution, feedback, and continueBtn
             solution.hidden = true;
