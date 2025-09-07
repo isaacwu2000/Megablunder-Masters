@@ -5,13 +5,6 @@ from math import e
 app = initialize_app()
 db = firestore.client()
 
-@https_fn.on_call(
-    cors=options.CorsOptions(
-        cors_origins="*", # allow all origins
-        cors_methods=["post", "get", "options"] # preflight + call
-    )
-)
-
 @https_fn.on_call()
 def get_problem(req: https_fn.CallableRequest):
     if req.auth is None:
